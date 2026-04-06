@@ -1,5 +1,7 @@
 https://www.python.org/ftp/python/3.14.3/python-3.14.3-amd64.exe # to install python
 
+python -m venv venv # to create a virtual environment
+
 venv\Scripts\activate # to activate the virtual environment before all manipulations
 
 pip install -r requirements.txt # to install the dependencies
