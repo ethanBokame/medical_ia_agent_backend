@@ -9,7 +9,12 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
 
-    # Importer et enregistrer les routes après init
+    # 🔥 IMPORTER LES MODELS (OBLIGATOIRE)
+    from models.user import User
+    from models.conversation import Conversation
+    from models.message import Message
+
+    # Routes
     from routes.auth import auth_bp
     app.register_blueprint(auth_bp, url_prefix="/api")
 
@@ -19,5 +24,5 @@ app = create_app()
 
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()  # Crée les tables si elles n'existent pas
+        db.create_all()
     app.run(debug=True)
