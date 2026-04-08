@@ -2,7 +2,7 @@
 from extensions import db
 from models.user import User
 
-def seed_users(app):
+def seedUsers(app):
     """Reçoit l'instance app en paramètre"""
     with app.app_context():
         email_user = "usertest@gmail.com"
@@ -13,6 +13,6 @@ def seed_users(app):
             user.set_password("user1234")
             db.session.add(user)
             db.session.commit()
-            print("✅ Utilisateur fictif créé !")
+            print("Utilisateur fictif créé")
         else:
-            print("ℹ️ Utilisateur déjà présent")
+            print("Utilisateur déjà présent")

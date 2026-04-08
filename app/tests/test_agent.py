@@ -1,4 +1,4 @@
-from services.agent import Agent
+from app.services.agent import Agent
 
 agent = Agent()
 

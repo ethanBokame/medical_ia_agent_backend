@@ -26,9 +26,9 @@ def create_app():
     # import routes
     from routes.auth import auth_bp
     app.register_blueprint(auth_bp, url_prefix="/api")
-    from routes.ConversationRoutes import conversation_bp
+    from routes.conversation import conversation_bp
     app.register_blueprint(conversation_bp, url_prefix="/api")
-    from routes.MessageRoutes import message_bp
+    from routes.message import message_bp
     app.register_blueprint(message_bp, url_prefix="/api")
 
     return app
@@ -38,5 +38,5 @@ app = create_app()
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()  # Create tables if not exits
-        seed_users(app)  # Create a fake user
+        seedUsers(app)  # Create a fake user
     app.run(debug=True)
