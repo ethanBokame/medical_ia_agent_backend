@@ -10,7 +10,9 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    CORS(app) # Autorise les CORS sur toutes les routes
+    
+    CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+
 
     # init extensions
     db.init_app(app)
