@@ -2,12 +2,15 @@ from flask import Flask
 from config import Config
 from extensions import db, bcrypt
 from seeders.user_seeder import seed_users 
+from flask_cors import CORS
 
 def create_app():
 
     # create flask app
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    CORS(app) # Autorise les CORS sur toutes les routes
 
     # init extensions
     db.init_app(app)

@@ -42,7 +42,7 @@ def get_conversation(current_user, conversation_id):
 @conversation_bp.route("/conversation", methods=["POST"])
 @token_required
 def create_conversation(current_user):
-    data = request.get_json()
+    # data = request.get_json()
     conversation = Conversation(user_id=current_user.id)
     db.session.add(conversation)
     db.session.commit()
