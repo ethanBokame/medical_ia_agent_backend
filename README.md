@@ -56,4 +56,4 @@ urllib3            2.6.3
 Werkzeug           3.1.8
 yarg               0.1.10
 
-python app.py # to run the application
+python app/app.py # to run the application
