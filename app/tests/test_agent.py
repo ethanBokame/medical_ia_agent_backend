@@ -1,4 +1,4 @@
-from classes.agent import Agent
+from services.agent import Agent
 
 agent = Agent()
 

@@ -1,20 +1,24 @@
 from flask import Flask
 from config import Config
 from extensions import db, bcrypt
+from seeders.user_seeder import seed_users 
 
 def create_app():
+
+    # create flask app
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    # init extensions
     db.init_app(app)
     bcrypt.init_app(app)
 
-    # Importer les modèles pour SQLAlchemy
+    # import models
     from models.user import User
     from models.conversation import Conversation
     from models.message import Message
 
-    # Importer et enregistrer les routes après init
+    # import routes
     from routes.auth import auth_bp
     app.register_blueprint(auth_bp, url_prefix="/api")
     from routes.ConversationRoutes import conversation_bp
@@ -28,5 +32,6 @@ app = create_app()
 
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()  # Crée les tables si elles n'existent pas
+        db.create_all()  # Create tables if not exits
+        seed_users(app)  # Create a fake user
     app.run(debug=True)

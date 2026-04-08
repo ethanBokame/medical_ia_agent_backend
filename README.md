@@ -25,4 +25,4 @@ requests           2.33.1
 urllib3            2.6.3
 Werkzeug           3.1.8
 
-flask run # to run the application
+python app/app.py # to run the application

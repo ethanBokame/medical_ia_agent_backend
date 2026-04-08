@@ -7,7 +7,7 @@ from config import Config
 from datetime import datetime, timedelta
 from utils.token_required import token_required
 from models.conversation import Conversation
-from classes.agent import Agent
+from services.agent import Agent
 from models.message import Message
 
 message_bp = Blueprint("message", __name__)
