@@ -9,9 +9,18 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
 
+    # Importer les modèles pour SQLAlchemy
+    from models.user import User
+    from models.conversation import Conversation
+    from models.message import Message
+
     # Importer et enregistrer les routes après init
     from routes.auth import auth_bp
     app.register_blueprint(auth_bp, url_prefix="/api")
+    from routes.ConversationRoutes import conversation_bp
+    app.register_blueprint(conversation_bp, url_prefix="/api")
+    from routes.MessageRoutes import message_bp
+    app.register_blueprint(message_bp, url_prefix="/api")
 
     return app
 
