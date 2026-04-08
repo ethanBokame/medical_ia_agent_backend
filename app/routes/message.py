@@ -58,8 +58,8 @@ def chat(current_user):
         
         return jsonify({
             "success": True,
-            "response": agent_response,
-            "message_id": agent_msg.id
+            "data": agent_response,
+            "message": "Reponse envoyée"
         }), 200
         
     except Exception as e:
