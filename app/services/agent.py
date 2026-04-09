@@ -1,16 +1,14 @@
 from openai import OpenAI
-from .patient import Patient
 import json
 import os
 from dotenv import load_dotenv
+from rich import print as rprint
 
 load_dotenv()
 API_KEY = os.environ.get('API_KEY')
 
 if not API_KEY:
-    print("⚠️ API_KEY non trouvée")
-
-patient = Patient(14, "male", 40, 1.75)
+    print("API_KEY non trouvée")
 
 tools = [
     {
@@ -28,7 +26,7 @@ tools = [
 ]
 
 def get_patient_data():
-    return patient.getPatientData()
+    return {"age": 14, "gender": "male", "weight": 40, "size": 1.75}
 
 TOOL_MAPPING = {
     "get_patient_data": get_patient_data,
@@ -41,7 +39,7 @@ class Agent:
             api_key=API_KEY,
             timeout=30.0,
         )
-        self.model = "openai/gpt-3.5-turbo"
+        self.model = "openai/gpt-oss-120b:free"
         self.messages = [
             {
                 "role": "system",
@@ -77,9 +75,12 @@ class Agent:
                       "Je vous conseille d'appeler le 15 maintenant. Ce message est urgent. "
                 """
             },
+            {
+              "role": "assistant",
+              "content": "Bonjour, je suis JARVIS, votre agent ia spécialisé en diagnostics médicaux. Quels sont vos symptômes ?"
+            }
         ]
-        self.tools = tools
-        self.tool_used = False
+        # self.tools = tools
 
     def load_history(self, messages):
         """Charge l'historique depuis la base de données"""
@@ -101,10 +102,11 @@ class Agent:
                       
                       PROCESSUS OBLIGATOIRE (toujours en phrases courtes) :
                       1. D'abord, utilise OBLIGATOIREMENT get_patient_data (sans argument) pour obtenir l'âge, poids, taille, son genre
-                      2. Ensuite, pose UNE SEULE question à la fois pour recueillir les symptômes
-                      3. Continue à poser des questions une par une jusqu'à avoir suffisamment d'informations
-                      4. Voici mon avis médical.
-                      5. Enfin, propose un diagnostic
+                      2. Présente le patient avec ses informations récupérées
+                      3. Ensuite, pose UNE SEULE question à la fois pour recueillir les symptômes
+                      4. Continue à poser des questions une par une jusqu'à avoir suffisamment d'informations
+                      5. Voici mon avis médical.
+                      6. Enfin, propose un diagnostic
                       
                       # RÈGLES IMPORTANTES
                       - Ne pose JAMAIS plus d'une question par message
@@ -115,9 +117,13 @@ class Agent:
 
                       RÈGLES D'URGENCE :
                       Si vous entendez "difficultés à respirer" ou "douleur dans la poitrine", dites immédiatement :
-                      "Je vous conseille d'appeler le 15 maintenant. Ce message est urgent. "
+                      "Je vous conseille d'appeler le 112 maintenant. Ce message est urgent. "
                 """
             },
+            {
+                "role": "assistant",
+                "content": "Bonjour, je suis JARVIS, votre agent ia spécialisé en diagnostics médicaux. Décrivez moi vos symptômes afin que je puisse vous aider"
+            }
         ]
         
         for msg in messages:
@@ -127,96 +133,41 @@ class Agent:
                 "content": msg.content
             })
         
-        print(f"📚 Historique chargé: {len(messages)} messages")
+        print(f"Historique chargé: {len(messages)} messages")
 
     def chat(self, message):
-        try:
-            self.messages.append({"role": "user", "content": message})
-            print(f"🔄 Appel API... (tool_used={self.tool_used})")
-            
-            try:
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=self.messages,
-                    tools=self.tools if not self.tool_used else [],
-                )
-            except Exception as api_error:
-                print(f"❌ Erreur API: {api_error}")
-                return "Désolé, je n'arrive pas à répondre pour le moment."
+      # add user message to history
+      self.messages.append({"role": "user", "content": message})
+          
+      # get response from agent
+      response1 = self.client.chat.completions.create(
+          model=self.model,
+          messages=self.messages,
+          tools=tools
+      ).choices[0].message
 
-            if response is None:
-                print("❌ Response est None")
-                return "Je n'ai pas pu générer de réponse."
-            
-            if not hasattr(response, 'choices') or response.choices is None:
-                print("❌ Response.choices est None")
-                return "Erreur technique: pas de réponse de l'API."
-            
-            if len(response.choices) == 0:
-                print("❌ Aucun choix")
-                return "Aucune réponse générée."
+      # check if agent want to use a tool
+      if response1.tool_calls:
+        tool_name = response1.tool_calls[0].function.name
+        tools_args = json.loads(response1.tool_calls[0].function.arguments)
+        tool_response = TOOL_MAPPING[tool_name](**tools_args)
+        print("Le LLM a choisis l'outil : ", tool_name)
+        self.messages.append({
+            "role": "tool",
+            "tool_call_id": response1.tool_calls[0].id,
+            "content": json.dumps(tool_response),
+        })
 
-            choice = response.choices[0]
-            
-            # Gestion des tool calls
-            if hasattr(choice, 'finish_reason') and choice.finish_reason == 'tool_calls':
-                print("🔧 Tool call détecté!")
-                self.tool_used = True
-                
-                # ✅ ÉTAPE 1: Ajouter le message assistant avec les tool_calls
-                self.messages.append(choice.message)
-                
-                # ✅ ÉTAPE 2: Traiter chaque tool call
-                if hasattr(choice.message, 'tool_calls') and choice.message.tool_calls:
-                    for tool_call in choice.message.tool_calls:
-                        tool_name = tool_call.function.name
-                        try:
-                            tool_args = json.loads(tool_call.function.arguments)
-                        except:
-                            tool_args = {}
-                        
-                        if tool_name in TOOL_MAPPING:
-                            tool_response = TOOL_MAPPING[tool_name](**tool_args)
-                            
-                            # ✅ ÉTAPE 3: Ajouter la réponse de l'outil avec le bon ID
-                            self.messages.append({
-                                "role": "tool",
-                                "tool_call_id": tool_call.id,
-                                "content": json.dumps(tool_response),
-                            })
-                            print(f"✅ Outil {tool_name} exécuté (id: {tool_call.id})")
-                
-                # ✅ ÉTAPE 4: Deuxième appel pour la réponse finale
-                try:
-                    final_response = self.client.chat.completions.create(
-                        model=self.model,
-                        messages=self.messages,
-                    )
-                    
-                    if final_response and final_response.choices:
-                        assistant_message = final_response.choices[0].message.content
-                        self.messages.append({"role": "assistant", "content": assistant_message})
-                        return assistant_message
-                    else:
-                        return "J'ai récupéré vos données, mais je n'ai pas pu continuer."
-                        
-                except Exception as final_error:
-                    print(f"❌ Erreur second appel: {final_error}")
-                    return "J'ai récupéré vos données mais je ne peux pas continuer pour le moment."
-            
-            # Réponse normale (pas de tool call)
-            assistant_message = choice.message.content
-            if assistant_message:
-                self.messages.append({"role": "assistant", "content": assistant_message})
-                return assistant_message
-            else:
-                return "Je n'ai pas de réponse à vous donner."
-            
-        except Exception as e:
-            print(f"❌ Erreur générale: {type(e).__name__}: {e}")
-            import traceback
-            traceback.print_exc()
-            return f"Désolé, une erreur technique est survenue."
+        response2 = self.client.chat.completions.create(
+            model=self.model,
+            messages=self.messages,
+            tools=tools
+        ).choices[0].message
+
+        return response2.content
+
+      print("Le LLM n'a pas utilisé d'outil et a répondu directement")
+      return response1.content
 
     def clear_history(self):
         """Réinitialiser l'historique"""
