@@ -1,4 +1,6 @@
 from app.services.agent import Agent
+from pprint import pprint
+from rich import print as rprint
 
 agent = Agent()
 
@@ -13,4 +15,4 @@ while True:
   response = agent.chat(user_input)
 
   # agent response
-  print(response.choices[0].message.content)
+  rprint(response)
