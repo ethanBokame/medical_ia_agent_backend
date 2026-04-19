@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+PWD_AIVEN = os.environ.get('PWD_AIVEN')
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "secret123")
@@ -6,6 +10,6 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
         # "mysql+pymysql://root:1234@localhost:3307/medical_ia_agent"
-        "mysql+pymysql://avnadmin:AVNS_8AbLwjJlrUModRwnl8E@mysql-136fdcf2-ethaniraqui-3e24.e.aivencloud.com:14567/defaultdb"
+        "mysql+pymysql://avnadmin:{}@mysql-136fdcf2-ethaniraqui-3e24.e.aivencloud.com:14567/defaultdb".format(PWD_AIVEN)
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
