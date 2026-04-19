@@ -1,5 +1,5 @@
 from flask import Flask
-from config import Config
+from app.config import Config
 from extensions import db, bcrypt
 from seeders.user import seedUsers 
 from flask_cors import CORS
