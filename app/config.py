@@ -6,6 +6,6 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
         # "mysql+pymysql://root:1234@localhost:3307/medical_ia_agent"
-        "mysql+pymysql://root:n5z94zvKXiPEzSIumBPiqlelxGexnAfz@dpg-d7ifghnaqgkc739snsig-a:5432/medical_ia_agent_backend"
+        "postgresql://root:n5z94zvKXiPEzSIumBPiqlelxGexnAfz@dpg-d7ifghnaqgkc739snsig-a.virginia-postgres.render.com/medical_ia_agent_backend"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
