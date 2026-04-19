@@ -1,10 +1,7 @@
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 class Config:
-    PWD_AIVEN = os.environ.get('PWD_AIVEN')
+    SECRET_KEY = os.environ.get("SECRET_KEY", "secret123")
     # MySQL root sans mot de passe
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL",
