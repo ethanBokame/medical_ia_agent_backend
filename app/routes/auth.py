@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 from models.user import User
 from extensions import db
 import jwt
-from config import Config
+from app.config import Config
 from datetime import datetime, timedelta
 from functools import wraps
 
