@@ -1,6 +1,6 @@
 from flask import Flask
 from app.config import Config
-from extensions import db, bcrypt
+from app.extensions import db, bcrypt
 from seeders.user import seedUsers 
 from flask_cors import CORS
 
