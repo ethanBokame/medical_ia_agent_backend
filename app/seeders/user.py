@@ -1,5 +1,5 @@
 # seeders/user_seeder.py
-from extensions import db
+from app.extensions import db
 from models.user import User
 
 def seedUsers(app):
