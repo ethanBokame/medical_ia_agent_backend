@@ -35,6 +35,32 @@ def login():
     user_data["token"] = token
 
     return jsonify({"success": True, "data": user_data, "message": "Connexion réussie"})
+  
+
+# --- register ---
+@auth_bp.route("/register", methods=["POST"])
+def register():
+    data = request.get_json()
+    nom = data.get("nom")
+    email = data.get("email")
+    password = data.get("password")
+
+    user = User(nom=nom, email=email)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+
+    token = jwt.encode(
+        {"user_id": user.id, "exp": datetime.utcnow() + timedelta(hours=1)},
+        Config.SECRET_KEY,
+        algorithm="HS256",
+    )
+
+    # Mettre le token à l'intérieur de "data"
+    user_data = user.to_dict()
+    user_data["token"] = token
+
+    return jsonify({"success": True, "data": user_data, "message": "Inscription réussie"})
 
 
 # --- DÉCORATEUR POUR TOKEN ---

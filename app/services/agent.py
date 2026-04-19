@@ -10,27 +10,7 @@ API_KEY = os.environ.get('API_KEY')
 if not API_KEY:
     print("API_KEY non trouvée")
 
-tools = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_patient_data",
-            "description": "Get patient data including age, gender, weight, and size",
-            "parameters": {
-                "type": "object",
-                "properties": {},
-                "required": []
-            }
-        }
-    }
-]
-
-def get_patient_data():
-    return {"age": 14, "gender": "male", "weight": 40, "size": 1.75}
-
-TOOL_MAPPING = {
-    "get_patient_data": get_patient_data,
-}
+tools = []
 
 class Agent:
     def __init__(self, conversation_id=None):
@@ -57,22 +37,20 @@ class Agent:
                       ✅ Bon: "Je pense que vous avez peut être une angine. Deux autres possibilités existent. La première est une grippe. La deuxième est un simple rhume."
                       
                       PROCESSUS OBLIGATOIRE (toujours en phrases courtes) :
-                      1. D'abord, utilise OBLIGATOIREMENT get_patient_data (sans argument) pour obtenir l'âge, poids, taille, son genre
-                      2. Ensuite, pose UNE SEULE question à la fois pour recueillir les symptômes
-                      3. Continue à poser des questions une par une jusqu'à avoir suffisamment d'informations
-                      4. Voici mon avis médical.
-                      5. Enfin, propose un diagnostic
+                      1. Pose UNE SEULE question à la fois pour recueillir les symptômes
+                      2. Continue à poser des questions une par une jusqu'à avoir suffisamment d'informations
+                      3. Voici mon avis médical.
+                      4. Enfin, propose un diagnostic
                       
                       # RÈGLES IMPORTANTES
                       - Ne pose JAMAIS plus d'une question par message
                       - N'utilise PAS get_patient_data si tu l'as déjà utilisé dans la conversation
-                      - Ne donne JAMAIS de diagnostic avant d'avoir posé au moins 5
-                       questions sur les symptômes
+                      - Ne donne JAMAIS de diagnostic avant d'avoir posé au moins 5 questions sur les symptômes
                       - Attends d'avoir reçu les données de get_patient_data avant de continuer
 
                       RÈGLES D'URGENCE :
                       Si vous entendez "difficultés à respirer" ou "douleur dans la poitrine", dites immédiatement :
-                      "Je vous conseille d'appeler le 15 maintenant. Ce message est urgent. "
+                      "Je vous conseille d'appeler le 112 maintenant. Ce message est urgent. "
                 """
             },
             {
