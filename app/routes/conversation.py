@@ -3,7 +3,7 @@ from flask import Blueprint, request, jsonify
 from app.models.user import User
 from app.extensions import db
 import jwt
-from utils.token_required import token_required
+from app.utils.token_required import token_required
 from app.models.conversation import Conversation
 
 # Blueprint for conversation routes
