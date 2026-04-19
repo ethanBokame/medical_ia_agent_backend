@@ -1,7 +1,7 @@
 # routes/auth.py
 from flask import Blueprint, request, jsonify
-from models.user import User
-from extensions import db
+from app.models.user import User
+from app.extensions import db
 import jwt
 from app.config import Config
 from datetime import datetime, timedelta

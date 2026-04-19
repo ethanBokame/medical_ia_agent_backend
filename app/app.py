@@ -24,11 +24,11 @@ def create_app():
     from app.models.message import Message
 
     # import routes
-    from routes.auth import auth_bp
+    from app.routes.auth import auth_bp
     app.register_blueprint(auth_bp, url_prefix="/api")
-    from routes.conversation import conversation_bp
+    from app.routes.conversation import conversation_bp
     app.register_blueprint(conversation_bp, url_prefix="/api")
-    from routes.message import message_bp
+    from app.routes.message import message_bp
     app.register_blueprint(message_bp, url_prefix="/api")
 
     return app
