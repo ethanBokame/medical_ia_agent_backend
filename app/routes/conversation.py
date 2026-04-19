@@ -1,10 +1,10 @@
 # routes/auth.py
 from flask import Blueprint, request, jsonify
-from app.models.user import User
-from app.extensions import db
+from models.user import User
+from extensions import db
 import jwt
-from app.utils.token_required import token_required
-from app.models.conversation import Conversation
+from utils.token_required import token_required
+from models.conversation import Conversation
 
 # Blueprint for conversation routes
 conversation_bp = Blueprint("conversation", __name__)

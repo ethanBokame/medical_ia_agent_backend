@@ -1,9 +1,9 @@
 # routes/auth.py
 from flask import Blueprint, request, jsonify
-from app.models.user import User
-from app.extensions import db
+from models.user import User
+from extensions import db
 import jwt
-from app.config import Config
+from config import Config
 from datetime import datetime, timedelta
 from functools import wraps
 
@@ -35,7 +35,7 @@ def login():
     user_data["token"] = token
 
     return jsonify({"success": True, "data": user_data, "message": "Connexion réussie"})
-  
+
 
 # --- register ---
 @auth_bp.route("/register", methods=["POST"])
@@ -60,7 +60,9 @@ def register():
     user_data = user.to_dict()
     user_data["token"] = token
 
-    return jsonify({"success": True, "data": user_data, "message": "Inscription réussie"})
+    return jsonify(
+        {"success": True, "data": user_data, "message": "Inscription réussie"}
+    )
 
 
 # --- DÉCORATEUR POUR TOKEN ---

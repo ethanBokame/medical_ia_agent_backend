@@ -1,5 +1,6 @@
-from app.extensions import db, bcrypt
+from extensions import db, bcrypt
 from datetime import datetime
+
 
 class User(db.Model):
     __tablename__ = "users"
@@ -9,7 +10,9 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     mot_de_passe = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
     def set_password(self, password):
         self.mot_de_passe = bcrypt.generate_password_hash(password).decode("utf-8")
@@ -23,5 +26,5 @@ class User(db.Model):
             "nom": self.nom,
             "email": self.email,
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat() if self.updated_at else None
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
         }

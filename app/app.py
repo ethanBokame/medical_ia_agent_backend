@@ -1,8 +1,9 @@
 from flask import Flask
-from app.config import Config
-from app.extensions import db, bcrypt
-from app.seeders.user import seedUsers 
+from config import Config
+from extensions import db, bcrypt
+from seeders.user import seedUsers
 from flask_cors import CORS
+
 
 def create_app():
 
@@ -10,28 +11,30 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    
     CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
-
 
     # init extensions
     db.init_app(app)
     bcrypt.init_app(app)
 
     # import models
-    from app.models.user import User
-    from app.models.conversation import Conversation
-    from app.models.message import Message
+    from models.user import User
+    from models.conversation import Conversation
+    from models.message import Message
 
     # import routes
-    from app.routes.auth import auth_bp
+    from routes.auth import auth_bp
+
     app.register_blueprint(auth_bp, url_prefix="/api")
-    from app.routes.conversation import conversation_bp
+    from routes.conversation import conversation_bp
+
     app.register_blueprint(conversation_bp, url_prefix="/api")
-    from app.routes.message import message_bp
+    from routes.message import message_bp
+
     app.register_blueprint(message_bp, url_prefix="/api")
 
     return app
+
 
 app = create_app()
 
