@@ -19,9 +19,9 @@ def create_app():
     bcrypt.init_app(app)
 
     # import models
-    from models.user import User
-    from models.conversation import Conversation
-    from models.message import Message
+    from app.models.user import User
+    from app.models.conversation import Conversation
+    from app.models.message import Message
 
     # import routes
     from routes.auth import auth_bp
