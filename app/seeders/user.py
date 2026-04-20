@@ -1,6 +1,6 @@
 # seeders/user_seeder.py
-from extensions import db
-from models.user import User
+from app.extensions import db
+from app.models.user import User
 
 def seedUsers(app):
     """Reçoit l'instance app en paramètre"""

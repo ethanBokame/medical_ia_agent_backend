@@ -1,9 +1,9 @@
 # routes/message.py - Version complète corrigée
 from flask import Blueprint, request, jsonify
-from models.message import Message
-from services.agent import Agent
-from extensions import db
-from utils.token_required import token_required
+from app.models.message import Message
+from app.services.agent import Agent
+from app.extensions import db
+from app.utils.token_required import token_required
 
 message_bp = Blueprint('message', __name__)
 

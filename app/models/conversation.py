@@ -1,4 +1,4 @@
-from extensions import db, bcrypt
+from app.extensions import db, bcrypt
 from datetime import datetime
 
 class Conversation(db.Model):
