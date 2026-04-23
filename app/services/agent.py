@@ -79,18 +79,15 @@ class Agent:
                       ✅ Bon: "Je pense que vous avez peut être une angine. Deux autres possibilités existent. La première est une grippe. La deuxième est un simple rhume."
                       
                       PROCESSUS OBLIGATOIRE (toujours en phrases courtes) :
-                      1. D'abord, utilise OBLIGATOIREMENT get_patient_data (sans argument) pour obtenir l'âge, poids, taille, son genre
-                      2. Présente le patient avec ses informations récupérées
-                      3. Ensuite, pose UNE SEULE question à la fois pour recueillir les symptômes
-                      4. Continue à poser des questions une par une jusqu'à avoir suffisamment d'informations
-                      5. Voici mon avis médical.
-                      6. Enfin, propose un diagnostic
+                      1. Pose UNE SEULE question à la fois pour recueillir les symptômes
+                      2. Continue à poser des questions une par une jusqu'à avoir suffisamment d'informations
+                      3. Voici mon avis médical.
+                      4. Enfin, propose un diagnostic
                       
                       # RÈGLES IMPORTANTES
                       - Ne pose JAMAIS plus d'une question par message
                       - N'utilise PAS get_patient_data si tu l'as déjà utilisé dans la conversation
-                      - Ne donne JAMAIS de diagnostic avant d'avoir posé au moins 5
-                       questions sur les symptômes
+                      - Ne donne JAMAIS de diagnostic avant d'avoir posé au moins 5 questions sur les symptômes
                       - Attends d'avoir reçu les données de get_patient_data avant de continuer
 
                       RÈGLES D'URGENCE :
